@@ -1,31 +1,55 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { addReminder } from '../actions';
+import { bindActionCreators } from 'redux';
 
-export default class Form extends Component {
+class Form extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			text: ''
+		};
+	}
+	addReminder() {
+		this.props.addReminder(this.state.text);
+		console.log(this.state.text);
+	}
 	render() {
 		return (
 			<div>
-				<form className='form-inline' onSubmit={e => e.preventDefault()}>
-					<div className='form-group mb-2'>
-						<label for='staticEmail2' className='sr-only'>
-							Remainder
-						</label>
-					</div>
+				<h2 className='text-primary'>Remainders</h2>
+				<br />
+				<br />
+				<span className='form-inline'>
 					<div className='form-group mx-sm-3 mb-2'>
-						<label for='inputPassword2' className='sr-only'>
-							Password
-						</label>
 						<input
-							type='password'
+							type='text'
 							className='form-control'
-							id='inputPassword2'
-							placeholder='Remainder'
+							placeholder='I have to...'
+							onChange={e => this.setState({ text: e.target.value })}
 						/>
+						<input type='datetime-local' />
 					</div>
-					<button type='submit' className='btn btn-primary mb-2'>
+					<button
+						type='submit'
+						className='btn btn-primary mb-2'
+						onClick={this.props.addReminder}
+					>
 						Add
 					</button>
-				</form>
+				</span>
 			</div>
 		);
 	}
 }
+function mapStateToProps(state) {
+	console.log('state', state);
+}
+function mapDispatchToProps(dipatch) {
+	return bindActionCreators({ addReminder }, dipatch);
+}
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(Form);
