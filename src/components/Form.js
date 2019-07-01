@@ -65,6 +65,7 @@ class Form extends Component {
 				<input
 					className='form-control mt-2'
 					type='datetime-local'
+					placeholder='Choose date& time...'
 					onChange={e => this.setState({ dueDate: e.target.value })}
 				/>
 				<button
