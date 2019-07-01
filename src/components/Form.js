@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addReminder, removeReminder } from '../actions';
+import { addReminder, removeReminder, clearReminders } from '../actions';
 import { bindActionCreators } from 'redux';
-
+import moment from 'moment';
 class Form extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			text: ''
+			text: '',
+			dueDate: ''
 		};
 	}
 	addReminder() {
-		this.props.addReminder(this.state.text);
+		this.props.addReminder(this.state.text, this.state.dueDate);
 	}
 	renderReminders() {
 		const reminders = this.props.reminders;
@@ -19,9 +20,12 @@ class Form extends Component {
 			<ol className='bg-primary'>
 				{reminders.map(reminder => {
 					return (
-						<li key={reminder.id} className='mb-2'>
+						<li key={reminder.id}>
 							<div className='list-item ' style={{ float: 'left' }}>
-								{reminder.text}
+								<span style={{ marginBottom: '2px' }}>{reminder.text}</span>
+							</div>
+							<div>
+								<em>{moment(new Date(reminder.dueDate)).fromNow()}</em>
 							</div>
 							<div
 								className='list-item delete-button text-danger'
@@ -30,7 +34,7 @@ class Form extends Component {
 								}}
 								style={{
 									display: 'inline-block',
-									float: 'right'
+									float: ''
 								}}
 							>
 								&#x2715;
@@ -42,8 +46,10 @@ class Form extends Component {
 		);
 	}
 	removeReminder(id) {
-		console.log('deleting in application id', id);
-		console.log('this.props', this.props);
+		this.props.removeReminder(id);
+	}
+	clearReminders() {
+		this.props.clearReminders();
 	}
 	render() {
 		console.log('this.props', this.props);
@@ -56,6 +62,11 @@ class Form extends Component {
 					placeholder='Enter your reminder...'
 					onChange={e => this.setState({ text: e.target.value })}
 				/>
+				<input
+					className='form-control mt-2'
+					type='datetime-local'
+					onChange={e => this.setState({ dueDate: e.target.value })}
+				/>
 				<button
 					type='button'
 					className='btn btn-primary btn-sm m-3'
@@ -66,6 +77,7 @@ class Form extends Component {
 				<button
 					type='button'
 					className='btn btn-secondary bg-danger btn-sm m-3'
+					onClick={() => this.clearReminders()}
 				>
 					Clear All
 				</button>
@@ -81,7 +93,10 @@ function mapStateToProps(state) {
 	};
 }
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ addReminder, removeReminder }, dispatch);
+	return bindActionCreators(
+		{ addReminder, removeReminder, clearReminders },
+		dispatch
+	);
 }
 export default connect(
 	mapStateToProps,
