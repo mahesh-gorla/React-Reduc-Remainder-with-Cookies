@@ -12,44 +12,61 @@ class Form extends Component {
 	}
 	addReminder() {
 		this.props.addReminder(this.state.text);
-		console.log(this.state.text);
+	}
+	renderReminders() {
+		const reminders = this.props.reminders;
+		return (
+			<ul className='mb-2'>
+				{reminders.map(reminder => {
+					return (
+						<li className='bg-primary mb-2' key={reminder.id}>
+							<div>{reminder.text}</div>
+						</li>
+					);
+				})}
+			</ul>
+		);
 	}
 	render() {
+		console.log('this.props', this.props);
 		return (
-			<div>
-				<h2 className='text-primary'>Remainders</h2>
-				<br />
-				<br />
-				<span className='form-inline'>
-					<div className='form-group mx-sm-3 mb-2'>
-						<input
-							type='text'
-							className='form-control'
-							placeholder='I have to...'
-							onChange={e => this.setState({ text: e.target.value })}
-						/>
-						<input type='datetime-local' />
-					</div>
-					<button
-						type='submit'
-						className='btn btn-primary mb-2'
-						onClick={this.props.addReminder}
-					>
-						Add
-					</button>
-				</span>
+			<div style={{ backgroundColor: 'bg-light' }}>
+				<h1 className='text-info mb-2'>Reminder Pro.</h1>
+				<input
+					class='form-control'
+					type='text'
+					placeholder='Enter your reminder...'
+					readonly
+					onChange={e => this.setState({ text: e.target.value })}
+				/>
+				<button
+					type='button'
+					className='btn btn-primary btn-sm m-3'
+					onClick={() => this.addReminder()}
+				>
+					ADD
+				</button>
+				<button
+					type='button'
+					className='btn btn-secondary bg-danger btn-sm m-3'
+				>
+					Clear All
+				</button>
+				{this.renderReminders()}
 			</div>
 		);
 	}
 }
 function mapStateToProps(state) {
 	console.log('state', state);
+	return {
+		reminders: state
+	};
 }
-function mapDispatchToProps(dipatch) {
-	return bindActionCreators({ addReminder }, dipatch);
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({ addReminder }, dispatch);
 }
-
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(Form);

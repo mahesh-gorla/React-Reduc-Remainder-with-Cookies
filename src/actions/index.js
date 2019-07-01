@@ -1,10 +1,20 @@
-import { ADD_REMINDER } from '../constants';
+import { ADD_REMINDER, CLEAR_REMINDER, REMOVE_REMINDER } from '../constants';
 
 export const addReminder = text => {
-	const action = {
+	return {
 		type: ADD_REMINDER,
 		text: text
 	};
-	console.log('action in addReminder', action);
-	return action;
 };
+
+export const removeReminder = () => {
+	return {
+		type: REMOVE_REMINDER
+	};
+};
+
+// export const clearReminder = () => {
+// 	return {
+// 		type: CLEAR_REMINDER
+// 	};
+// };
