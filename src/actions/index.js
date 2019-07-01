@@ -7,10 +7,13 @@ export const addReminder = text => {
 	};
 };
 
-export const removeReminder = () => {
-	return {
-		type: REMOVE_REMINDER
+export const removeReminder = id => {
+	const action = {
+		type: REMOVE_REMINDER,
+		id
 	};
+	console.log('deleting in action', action);
+	return action;
 };
 
 // export const clearReminder = () => {

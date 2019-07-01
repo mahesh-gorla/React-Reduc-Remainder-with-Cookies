@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addReminder } from '../actions';
+import { addReminder, removeReminder } from '../actions';
 import { bindActionCreators } from 'redux';
 
 class Form extends Component {
@@ -16,16 +16,34 @@ class Form extends Component {
 	renderReminders() {
 		const reminders = this.props.reminders;
 		return (
-			<ul className='mb-2'>
+			<ol className='bg-primary'>
 				{reminders.map(reminder => {
 					return (
-						<li className='bg-primary mb-2' key={reminder.id}>
-							<div>{reminder.text}</div>
+						<li key={reminder.id} className='mb-2'>
+							<div className='list-item ' style={{ float: 'left' }}>
+								{reminder.text}
+							</div>
+							<div
+								className='list-item delete-button text-danger'
+								onClick={() => {
+									this.removeReminder(reminder.id);
+								}}
+								style={{
+									display: 'inline-block',
+									float: 'right'
+								}}
+							>
+								&#x2715;
+							</div>
 						</li>
 					);
 				})}
-			</ul>
+			</ol>
 		);
+	}
+	removeReminder(id) {
+		console.log('deleting in application id', id);
+		console.log('this.props', this.props);
 	}
 	render() {
 		console.log('this.props', this.props);
@@ -33,10 +51,9 @@ class Form extends Component {
 			<div style={{ backgroundColor: 'bg-light' }}>
 				<h1 className='text-info mb-2'>Reminder Pro.</h1>
 				<input
-					class='form-control'
+					className='form-control'
 					type='text'
 					placeholder='Enter your reminder...'
-					readonly
 					onChange={e => this.setState({ text: e.target.value })}
 				/>
 				<button
@@ -64,7 +81,7 @@ function mapStateToProps(state) {
 	};
 }
 function mapDispatchToProps(dispatch) {
-	return bindActionCreators({ addReminder }, dispatch);
+	return bindActionCreators({ addReminder, removeReminder }, dispatch);
 }
 export default connect(
 	mapStateToProps,
